@@ -51,9 +51,11 @@ export default function App() {
     let name = e.target[0].value;
     let desc = e.target[1].value;
     let poster = e.target[2].value;
-    let subject_id = e.target[3].value;
+    let SubjectId = e.target[3].value;
+
+    console.log(SubjectId)
     
-    let Res = await axios.post('http://localhost:5500/topics', {name, desc, poster,subject_id});
+    let Res = await axios.post('http://localhost:5500/topics', {name, desc, poster,SubjectId});
     e.target.reset();
     console.log(Res)
 
@@ -149,6 +151,23 @@ export default function App() {
               className="flex items-center gap-2 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
             >Add Topic</button>
           </form>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <h2 className="text-xl font-semibold mb-4">Current Topics</h2>
+        <div className="divide-y  bg-slate-300 rounded-md py-2 px-4 ">
+          {topics.map(topic => (
+            <div key={topic._id} className="flex justify-between items-center py-4">
+              <h2 className="font-medium">{topic.name}</h2>
+              <button 
+                onClick={() => handleDeleteTopic(topic._id)}
+                className="text-red-500 hover:text-red-600 p-2"
+              >
+                <Trash2 size={20} />
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>

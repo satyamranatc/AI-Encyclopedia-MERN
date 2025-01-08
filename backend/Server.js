@@ -49,10 +49,16 @@ app.delete("/subjects", async (req, res) => {
 // -----Topics Apis:
 
 app.get("/topics", async (req, res) => {
-    
-    let topics = await Topic.find().populate('SubjectId');
+    let topics = await Topic.find()
     res.json(topics);
-})
+});
+
+app.post("/topicsById", async (req, res) => {
+    let {SubjectId} = req.body
+    let topics = await Topic.find({ SubjectId })
+    res.json(topics);
+});
+
 
 app.post("/topics", async (req, res) => {
     let {name,desc,poster,SubjectId} = req.body;

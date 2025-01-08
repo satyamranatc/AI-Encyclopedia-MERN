@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useParams,Link } from 'react-router-dom';
 
 import { BookOpen, ChevronRight, Search } from 'lucide-react';
@@ -6,75 +7,24 @@ import { BookOpen, ChevronRight, Search } from 'lucide-react';
 export default function Topics() {
     const { id } = useParams();
 
-    let [TopicList, setTopicList] = useState([
-        // Topics for Physics
-        {
-            id: 1,
-            name: 'Mechanics',
-            description: 'Study of motion and forces in Physics.',
-            SubjectId: 1
-        },
-        {
-            id: 2,
-            name: 'Optics',
-            description: 'Exploration of light and its interactions.',
-            SubjectId: 1
-        },
-        {
-            id: 3,
-            name: 'Thermodynamics',
-            description: 'Understanding heat, energy, and work.',
-            SubjectId: 1
-        },
-
-        // Topics for Music
-        {
-            id: 4,
-            name: 'Music Theory',
-            description: 'Foundational concepts in Music composition.',
-            SubjectId: 2
-        },
-        {
-            id: 5,
-            name: 'Instruments',
-            description: 'Learning about various musical instruments.',
-            SubjectId: 2
-        },
-        {
-            id: 6,
-            name: 'Vocal Techniques',
-            description: 'Techniques for improving vocal performance.',
-            SubjectId: 2
-        },
-
-        // Topics for Math
-        {
-            id: 7,
-            name: 'Algebra',
-            description: 'Important Math Topic, Algebra.',
-            SubjectId: 3
-        },
-        {
-            id: 8,
-            name: 'Geometry',
-            description: 'Study of shapes, sizes, and properties of space.',
-            SubjectId: 3
-        },
-        {
-            id: 9,
-            name: 'Calculus',
-            description: 'Understanding rates of change and integrals.',
-            SubjectId: 3
-        }
-    ]);
+    let [TopicList, setTopicList] = useState([]);
 
     const [selectedSubjectTopic, setselectedSubjectTopic] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
-    useEffect(() => {
-        let filteredTopic = TopicList.filter(topic => topic.SubjectId === parseInt(id));
-        setselectedSubjectTopic(filteredTopic);
-    }, [id, TopicList]);
+    useEffect(()=>{
+        async function getTopicList()
+        {
+            let TopicResponse = await axios.post(`http://localhost:5500/topicsById`,{
+                SubjectId: id
+            });
+            setTopicList(TopicResponse.data);
+            setselectedSubjectTopic(TopicResponse.data);
+            console.log(TopicResponse);
+        }
+        getTopicList();
+
+    },[])
 
     return (
         <div className="max-w-7xl mx-auto">
@@ -108,7 +58,7 @@ export default function Topics() {
                         
                         <div className="mt-4">
                             <h2 className="text-xl font-semibold mb-2">{topic.name}</h2>
-                            <p className="text-gray-600 mb-4">{topic.description}</p>
+                            <p className="text-gray-600 mb-4">{topic.desc}</p>
                             
                             <div className="flex justify-between items-center">
                                 <button className="text-blue-500 hover:text-blue-600 font-medium">
